@@ -1,15 +1,47 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const Usuario = require('../models/Usuario');
+const Usuarios = require('../models/Usuario');
 
 const ctrl = {};
+
+
+//
+// ─── MOSTRAR TOTAL DE USUARIOS REGISTRADOS ──────────────────────────────────────
+//
+
+ctrl.index = (req, res) => {
+
+    Usuarios.find({}, (err, usuarios) => {
+
+        if( err ) return res.status(500).json({ err });
+
+        Usuarios.countDocuments({}, (err, conteo) => {
+
+            if( err ) return res.status(500).json({ err });
+    
+            res.json({
+                ok: true,
+                usuarios,
+                registrados: conteo 
+            });
+    
+        });
+
+    });
+
+}
+    
+
+//
+// ─── CREAR USUARIO ──────────────────────────────────────────────────────────────
+//
 
 ctrl.crear = async (req, res) => {
 
     let body = req.body;
 
-    let usuario = new Usuario({
+    let usuario = new Usuarios({
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
@@ -44,7 +76,7 @@ ctrl.login = async (req, res) => {
 
     let body = req.body;
 
-    await Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
+    await Usuarios.findOne({ email: body.email }, (err, usuarioDB) => {
 
         if(err){
 
