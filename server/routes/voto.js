@@ -6,7 +6,7 @@ const { verificaToken, verificaAdminRole } = require('../middlewares/autenticaci
 const VotoController = require('../controllers/VotoController');
 
 router.get('/voto/:year/:mes', [verificaToken, verificaAdminRole], VotoController.votosPorMes);
-router.get('/voto', [ verificaToken ], VotoController.votosPorArea);
+router.get('/voto', [ verificaToken, verificaAdminRole ], VotoController.votosPorArea);
 router.post('/voto', verificaToken, VotoController.crear);
 
 module.exports = router;
